@@ -1,3 +1,6 @@
 require_relative './config/environment'
 
-get_personal_info
+cli=CommandLineInterface.new
+cli.signin_or_sign_up
+
+
