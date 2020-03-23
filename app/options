@@ -10,7 +10,7 @@ class CommandLineInterface
             puts"-------------------------------------------------------"
 
         end
-        def user_options
+        def user_options(user)
             prompt = TTY::Prompt.new
             @user_option= prompt.select(" Choose next option")do |option|
                 option.choice 'Make another entry'
@@ -20,11 +20,11 @@ class CommandLineInterface
         end
 
                 if @user_option=='Show my history'
-                    food_log_history
+                    food_log_history(user)
                 elsif @user_option=="Make another entry"
-                    create_food
+                    create_food(user)
                     elsif @user_option =='Update account'
-                        update_account
+                        update_account(user)
                     elsif @user_option=="Exit"
                         exit
 
@@ -42,13 +42,13 @@ class CommandLineInterface
            
             end
                 if @update_option== 'password'
-                    update_password
+                    update_password(user)
                 elsif @update_option=='weight'
-                    update_weight
+                    update_weight(user)
                 end
         end
 
-        def update_password#has to update
+        def update_password(user)#has to update
 
             prompt = TTY::Prompt.new
 
@@ -63,7 +63,7 @@ class CommandLineInterface
 
         end
 
-        def update_weight#has to update
+        def update_weight(user)#has to update
             prompt = TTY::Prompt.new
 
             new_weight_input= prompt.ask("Update you weight:") do |q|
@@ -73,7 +73,7 @@ class CommandLineInterface
               end
              new_weight_input=@weight_input
              puts "***Weight updated, choose another option***"
-             user_options
+             user_options(user)
             
         
         end
