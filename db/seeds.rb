@@ -5,10 +5,17 @@
 # n1=Food.create(food_name:"apple", calories:80,carbs:25,fat:2)
 # n2=Food.create(food_name:"banana", calories:110,carbs:27,fat:3)
 # n3=Food.create(food_name:"pear", calories:90,carbs:28,fat:4)
+# n4=Food.create(food_name:"cookie", calories:90,carbs:28,fat:4)
+# n5=Food.create(food_name:"cake", calories:90,carbs:28,fat:4)
+# n6=Food.create(food_name:"chocolate", calories:90,carbs:28,fat:4)
 
-# information1=NutritionalInformation.create(amount:1, user:user1,food:n1)
-# information2=NutritionalInformation.create(amount:2, user:user2,food:n2)
-# information3=NutritionalInformation.create(amount:3, user:user3,food:n3)
+# information1=Nutrition.create(amount:1, user:user1,food:n4)
+# information1=Nutrition.create(amount:1, user:user1,food:n5)
+# information1=Nutrition.create(amount:1, user:user1,food:n6)
+
+# information1=Nutrition.create(amount:1, user:user1,food:n1)
+# information2=Nutrition.create(amount:2, user:user2,food:n2)
+# information3=Nutrition.create(amount:3, user:user3,food:n3)
 
 
 

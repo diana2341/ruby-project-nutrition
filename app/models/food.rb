@@ -1,4 +1,4 @@
 class Food < ActiveRecord::Base
-    has_many :nutritional_informations
-    has_many :users, through: :nutritional_informations
+    has_many :nutritions
+    has_many :users, through: :nutritions
 end

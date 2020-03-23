@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_19_223936) do
+ActiveRecord::Schema.define(version: 2020_03_22_224308) do
 
   create_table "foods", force: :cascade do |t|
     t.string "food_name"
@@ -19,10 +19,10 @@ ActiveRecord::Schema.define(version: 2020_03_19_223936) do
     t.string "fat"
   end
 
-  create_table "nutritional_informations", force: :cascade do |t|
-    t.integer "amount"
+  create_table "nutritions", force: :cascade do |t|
     t.integer "food_id"
     t.integer "user_id"
+    t.integer "amount"
   end
 
   create_table "users", force: :cascade do |t|
