@@ -214,7 +214,7 @@ class CommandLineInterface
         end
        
        
-      
+      #RETURNS ALL FOODS
 
         def food_log_history(user)#shows history of specofic person
            # user=@user
@@ -227,6 +227,20 @@ class CommandLineInterface
             
             user_options
         end
+
+
+        #this method returns NOTHING******************
+        # def food_log_history(user)#shows history of specofic person
+        #     # user=@user
+        #      history = Nutrition.select {|food|food_id==food.id}
+        #      history.map do |info|
+        #           puts "This #{info.food_name}"
+        #           puts"contains #{info.calories} calories, #{info.carbs} grams of carbs and #{info.fat} grams of fat"
+             
+        #      end
+             
+        #      user_options
+        #  end
         #total up calorie count
        #find a way to destroy entries after user exits
     #    def run_application
