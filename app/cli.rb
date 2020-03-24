@@ -26,7 +26,7 @@ end
     
 
     def signin_or_sign_up
-        prompt = TTY::Prompt.new(symbols:{marker:"🥖"})
+        prompt = TTY::Prompt.new(symbols:{marker:"🍕"})
        @answer= prompt.select("would you like to log in or sign up")do |option|
         option.choice 'Log In'
         option.choice 'Sign Up'
@@ -39,7 +39,7 @@ end
      end
 
     def create_account
-        prompt = TTY::Prompt.new(symbols:{marker:"🥖"})
+        prompt = TTY::Prompt.new(symbols:{marker:"🍕"})
 
        @name_input= prompt.ask("What is your name?") do |q|
             q.required true
@@ -72,7 +72,7 @@ end
     end
 
     def user_log_in
-        prompt = TTY::Prompt.new(symbols:{marker:"🥖"})
+        prompt = TTY::Prompt.new(symbols:{marker:"🍕"})
           puts"     |LOG IN|"
             puts"🍏━━━━━━━━━━━━━━━🍏"
             @name_input= prompt.ask("Enter name:") do |q|
@@ -112,7 +112,9 @@ end
                  if  @make_account == "Yes" 
                      create_account
                  else
-                    puts "Thank you for visiting us,hope you'll consider joining us soon !"                                
+                    puts"╔═════════════════════════════ஓ๑🥦๑ஓ═════════════════════════════╗"
+                    puts "Thank you for visiting us, hope you'll consider joining us soon !"                                
+                    puts"╚═════════════════════════════ஓ๑🥦๑ஓ═════════════════════════════╝"
             end
         end
     end
@@ -122,8 +124,8 @@ end
     end
    
     def create_food
-        prompt = TTY::Prompt.new(symbols:{marker:"🥖"})
-        @food_name= prompt.ask("Name of food:") do |q|
+        prompt = TTY::Prompt.new(symbols:{marker:"🍕"})
+        @food_name= prompt.ask("🥄Name of food:") do |q|
             q.required true
             q.validate /^[a-zA-Z\s]+$/
             q.messages[:valid?]="Ivalid name input"
@@ -156,7 +158,7 @@ end
 
  
 
-         puts"How many #{@food_name}'s?"
+         puts"🥄How many #{@food_name}'s?"
         @amounts=gets.chomp
         Nutrition.find_or_create_by(amount:@amounts, food_id:@food.id, user_id:@user.id) 
     user_options
@@ -169,12 +171,13 @@ end
 
     end
     def user_options
-        prompt = TTY::Prompt.new(symbols:{marker:"🥖"})
+        prompt = TTY::Prompt.new(symbols:{marker:"🍕"})
         @user_option= prompt.select(" Choose next option")do |option|
             option.choice 'Make another entry'
             option.choice 'Show my history'
             option.choice 'My information'
             option.choice 'Update account'
+            option.choice 'Delete account'
             option.choice 'Exit'
     end
         user=@user
@@ -186,16 +189,25 @@ end
                 create_food
                 elsif @user_option =='Update account'
                     update_account(user)
+                elsif @user_option =='Delete account'
+                    delete_account
                 elsif @user_option=="Exit"
                     exit
 
         end
     end
     def display_info
-        puts "🥖Name #{@name_input}"
-        puts "🥖Age #{@age_input}" 
-        puts "🥖Weight #{@weight_input}"
-        puts "🥖password #{@password_input}"   
+        puts "  Y͎o͎u͎r͎ ͎I͎n͎f͎o͎r͎m͎a͎t͎i͎o͎n͎"
+        puts"🥑━━━━━━━━━━━━━━━🥑"
+        puts "   Name: #{@name_input}"
+        puts"🥑━━━━━━━━━━━━━━━🥑"
+        puts "   Age: #{@age_input}" 
+        puts"🥑━━━━━━━━━━━━━━━🥑"
+        puts "   Weight: #{@weight_input}"
+        puts"🥑━━━━━━━━━━━━━━━🥑"
+        puts "   password: #{@password_input}"   
+        puts"🥑━━━━━━━━━━━━━━━🥑"
+
         user_options       
     end
    
@@ -228,7 +240,10 @@ end
         new_weight_input=gets.chomp
             
          @weight_input=new_weight_input
-         puts "***Weight updated, choose another option***"
+         puts"          🍏━━━━━━━━━━━━━━━🍏"
+         puts "*** Weight updated, choose another option ***"
+         puts"          🍏━━━━━━━━━━━━━━━🍏"
+
          user_options
         
     
@@ -236,14 +251,15 @@ end
    
     def food_log_history
        User.last.foods.map do |info| 
-             puts "This #{info.food_name}"
-             puts"contains #{info.calories} calories, #{info.carbs} grams of carbs and #{info.fat} grams of fat"        
+             puts"▪️ You ate #{@amounts} #{info.food_name}(s), which contains #{info.calories} calories, #{info.carbs} gram(s) of carbs and #{info.fat} gram(s) of fat."        
         end       
         user_options
     end
 
     def delete_account
         User.last.delete
+        puts"🥖Were sad to see you go, hope you'll reconsider🥖"
+        puts"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     end
 
     #total up calorie count
