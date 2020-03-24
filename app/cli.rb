@@ -8,7 +8,7 @@ class CommandLineInterface
 
     
     def user_info(name,age,weight,password)
-     User.create(name:@name_input,age: @age_input,weight:@weight_input, password: @password_input)
+     User.find_or_create_by(name:@name_input,age: @age_input,weight:@weight_input, password: @password_input)
     end
     
 
@@ -101,7 +101,7 @@ class CommandLineInterface
     end
   
     def food_input(food_name,calories,carbs,fat)
-       Food.create(food_name:food_name, calories:calories,carbs:carbs,fat:fat)
+       Food.find_or_create_by(food_name:food_name, calories:calories,carbs:carbs,fat:fat)
     end
    
     def create_food
@@ -145,7 +145,7 @@ class CommandLineInterface
 
          puts"How many #{@food_name}'s?"
         @amounts=gets.chomp
-        Nutrition.create(amount:@amounts, food_id:@food.id, user_id:@user.id) 
+        Nutrition.find_or_create_by(amount:@amounts, food_id:@food.id, user_id:@user.id) 
 
             # food_nutrition_info(@food,@user,@amounts)
     user_options
@@ -196,16 +196,13 @@ class CommandLineInterface
     end
 
     def update_password(user)#has to update
-            
-        prompt = TTY::Prompt.new
+       # if User.find_by(name:@name_input,password:@password_input)
+            puts "Enter new password"
+            new_password_input=gets.chomp
 
-        new_password_input= prompt.ask("Enter new password:") do |q|
-            q.required true
-            q.validate /^[a-zA-Z0-9_.-]*$/
-            q.messages[:valid?]="Must not contain any Symbols"
-          end
-         @password_input=new_password_input
+         user.password=new_password_input
          puts "***password updated please sign in again***"
+         
          user_log_in
 
     end

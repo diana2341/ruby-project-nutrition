@@ -1,3 +1,9 @@
+new_password_input= prompt.ask("Enter new password:") do |q|
+            q.required true
+            q.validate /^[a-zA-Z0-9_.-]*$/
+            q.messages[:valid?]="Must not contain any Symbols"
+          end
+
 require "tty-prompt"
 require 'pry'
 #require './options.rb'
@@ -593,4 +599,70 @@ class CommandLineInterface
    
         
 end
+
+
+
+
+    def user_options
+        prompt = TTY::Prompt.new
+        @user_option= prompt.select(" Choose next option")do |option|
+            option.choice 'Make another entry'
+            option.choice 'Show my history'
+            option.choice 'My information'
+            option.choice 'Update account'
+            option.choice 'Exit'
+    end
+        user=@user
+            if @user_option=='Show my history'
+                food_log_history
+            elsif @user_option=='My information'
+                display_info
+            elsif @user_option=="Make another entry"
+                create_food
+                elsif @user_option =='Update account'
+                    update_account(user)
+                elsif @user_option=="Exit"
+                    exit
+
+        end
+    end
+    def display_info
+        puts "Name #{@name_input}"
+        puts "Age #{@age_input}" 
+        puts "Weight #{@weight_input}"
+        puts "password #{@password_input}"
+    end
+
+   
+   
+
+    def update_account(user)
+        prompt = TTY::Prompt.new
+        @update_option= prompt.select("Choose what to update")do |option|
+        option.choice 'password'
+        option.choice 'weight'
+       
+        end
+            if @update_option== 'password'
+                update_password(user)
+            elsif @update_option=='weight'
+                update_weight(user)
+            end
+    end
+
+    def update_password(user)#has to update
+        prompt = TTY::Prompt.new
+          if User.find_by(name:@name_input,password:@password_input)
+
+        new_password_input= prompt.ask("Enter new password:") do |q|
+            q.required true
+            q.validate /^[a-zA-Z0-9_.-]*$/
+            q.messages[:valid?]="Must not contain any Symbols"
+          end
+         user.password = new_password_input
+         puts "***password updated please sign in again***"
+          end
+         user_log_in
+
+    end
 
