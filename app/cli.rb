@@ -5,7 +5,20 @@ require 'pry'
 
 
 class CommandLineInterface
+def entrance
+puts"»»————-————————————————　   ————————————————————————-««"
+puts"(っ◔◡◔)っ 🍟𝘍𝘰𝘰𝘥 𝘥𝘪𝘢𝘳𝘺, 𝘬𝘦𝘦𝘱 𝘵𝘳𝘢𝘤𝘬 𝘰𝘧 𝘸𝘩𝘢𝘵 𝘺𝘰𝘶 𝘦𝘢𝘵!🍽 "
+puts"»»————-————————————————　   ————————————————————————-««"
+puts"           😎⁣🥓🍐🍌🍋🍋🍊🍊🌽🍎🥑🍎 🍑🥕🤤"
+puts"           🍔 ______             _      🌯"
+puts"           🥞(  /          /    //      🥩"
+puts"           🌮 -/--__ __ __/    // __ _, 🥘"
+puts"           🥗_/  (_)(_)(_/_   (/_(_)(_)_🍚"
+puts"           🍪                       /|  🍜"
+puts"           🍕                      (/   🎂"
+puts"           😋🍋🍊🍎🍓🍇🍐🍏🥝🥒🍅 🥭🍍🍒🤩"
 
+end
     
     def user_info(name,age,weight,password)
      User.find_or_create_by(name:@name_input,age: @age_input,weight:@weight_input, password: @password_input)
@@ -13,7 +26,7 @@ class CommandLineInterface
     
 
     def signin_or_sign_up
-        prompt = TTY::Prompt.new
+        prompt = TTY::Prompt.new(symbols:{marker:"🥖"})
        @answer= prompt.select("would you like to log in or sign up")do |option|
         option.choice 'Log In'
         option.choice 'Sign Up'
@@ -26,7 +39,7 @@ class CommandLineInterface
      end
 
     def create_account
-        prompt = TTY::Prompt.new
+        prompt = TTY::Prompt.new(symbols:{marker:"🥖"})
 
        @name_input= prompt.ask("What is your name?") do |q|
             q.required true
@@ -59,27 +72,31 @@ class CommandLineInterface
     end
 
     def user_log_in
-        prompt = TTY::Prompt.new
-          puts" |LOG IN|"
-              puts "-----------"
-
+        prompt = TTY::Prompt.new(symbols:{marker:"🥖"})
+          puts"     |LOG IN|"
+            puts"🍏━━━━━━━━━━━━━━━🍏"
             @name_input= prompt.ask("Enter name:") do |q|
                 q.required true
                 q.validate /^[a-zA-Z\s]+$/
                 q.messages[:valid?]="Ivalid name input"
                 q.modify   :capitalize
               end
-          
+              puts"🍏━━━━━━━━━━━━━━━🍏"
+
             @password_input= prompt.ask("Password:") do |q|
                 q.required true
                 q.validate /^[a-zA-Z0-9_.-]*$/
                 q.messages[:valid?]="Must not contain any Symbols"
               end
+              puts"🍏━━━━━━━━━━━━━━━🍏"
+
             if User.find_by(name:@name_input,password:@password_input)
                 @make_food= prompt.select("would you like to make a food entry")do |option|
                 option.choice 'Yes'
                 option.choice 'No'  
             end
+            puts"🍏━━━━━━━━━━━━━━━🍏"
+
             if @make_food == "Yes"
                 create_food
                 elsif @make_food =="No"
@@ -105,7 +122,7 @@ class CommandLineInterface
     end
    
     def create_food
-        prompt = TTY::Prompt.new
+        prompt = TTY::Prompt.new(symbols:{marker:"🥖"})
         @food_name= prompt.ask("Name of food:") do |q|
             q.required true
             q.validate /^[a-zA-Z\s]+$/
@@ -129,13 +146,9 @@ class CommandLineInterface
                     q.messages[:valid?]="Ivalid number input"
                 end
            @food= food_input(@food_name,@calories_input,@carbs_input,@fat_input)
-            #user_options
             user = User.find_by(name: user)
             amount=@amounts
-
-
-            create_nutrition_instance(user,@food,amount)
-           
+            create_nutrition_instance(user,@food,amount)          
     end
 
 
@@ -146,28 +159,29 @@ class CommandLineInterface
          puts"How many #{@food_name}'s?"
         @amounts=gets.chomp
         Nutrition.find_or_create_by(amount:@amounts, food_id:@food.id, user_id:@user.id) 
-
-            # food_nutrition_info(@food,@user,@amounts)
     user_options
     end
 
     def exit 
-        puts"-------------------------------------------------------"
-             puts"thank you for signing in #{@name_input}, sign in again soon!  "
-        puts"-------------------------------------------------------"
+    puts"╔═════════════════════════════ஓ๑🥦๑ஓ═════════════════════════════╗"
+    puts"       Thank you for signing in #{@name_input}, sign in again soon!  "        
+    puts"╚═════════════════════════════ஓ๑🥦๑ஓ═════════════════════════════╝"
 
     end
     def user_options
-        prompt = TTY::Prompt.new
+        prompt = TTY::Prompt.new(symbols:{marker:"🥖"})
         @user_option= prompt.select(" Choose next option")do |option|
             option.choice 'Make another entry'
             option.choice 'Show my history'
+            option.choice 'My information'
             option.choice 'Update account'
             option.choice 'Exit'
     end
         user=@user
             if @user_option=='Show my history'
-                food_log_history(user)
+                food_log_history
+            elsif @user_option=='My information'
+                display_info
             elsif @user_option=="Make another entry"
                 create_food
                 elsif @user_option =='Update account'
@@ -177,44 +191,42 @@ class CommandLineInterface
 
         end
     end
-
+    def display_info
+        puts "🥖Name #{@name_input}"
+        puts "🥖Age #{@age_input}" 
+        puts "🥖Weight #{@weight_input}"
+        puts "🥖password #{@password_input}"   
+        user_options       
+    end
    
    
 
     def update_account(user)
-        prompt = TTY::Prompt.new
+        prompt = TTY::Prompt.new(symbols:{marker:"🥖"})
         @update_option= prompt.select("Choose what to update")do |option|
-        option.choice 'password'
+        #option.choice 'password'
         option.choice 'weight'
        
         end
-            if @update_option== 'password'
-                update_password(user)
-            elsif @update_option=='weight'
+           # if @update_option== 'password'
+                #update_password(user)
+            if @update_option=='weight'
                 update_weight(user)
             end
     end
 
-    def update_password(user)#has to update
-       # if User.find_by(name:@name_input,password:@password_input)
-            puts "Enter new password"
-            new_password_input=gets.chomp
-
-         user.password=new_password_input
-         puts "***password updated please sign in again***"
-         
-         user_log_in
-
-    end
+    # def update_password(user)#has to update
+    #         puts "Enter new password"
+    #         new_password_input=gets.chomp
+    #      @password_input=new_password_input
+    #      puts "password updated!"     
+    #     user_options
+    # end
 
     def update_weight(user)#has to update
-        prompt = TTY::Prompt.new
-
-        new_weight_input= prompt.ask("Update you weight:") do |q|
-            q.required true
-            q.validate /^(0|[1-9]\d*)(\.\d+)?$/
-            q.messages[:valid?]="Must be a number"
-          end
+            "Update you weight"
+        new_weight_input=gets.chomp
+            
          @weight_input=new_weight_input
          puts "***Weight updated, choose another option***"
          user_options
@@ -222,47 +234,18 @@ class CommandLineInterface
     
     end
    
-   
-  #RETURNS ALL FOODS
-
-    def food_log_history#shows history of specofic person
-       # user=@user
-        history = Food.all.map {|food|food}#_id==user.id}
-        history.map do |info|
+    def food_log_history
+       User.last.foods.map do |info| 
              puts "This #{info.food_name}"
-             puts"contains #{info.calories} calories, #{info.carbs} grams of carbs and #{info.fat} grams of fat"
-        
-        end
-        
+             puts"contains #{info.calories} calories, #{info.carbs} grams of carbs and #{info.fat} grams of fat"        
+        end       
         user_options
     end
 
+    def delete_account
+        User.last.delete
+    end
 
-    # #this method returns NOTHING******************
-    # def food_log_history(user)#shows history of specofic person
-    #     #
-    #     # find the user
-    #     # want a list of all of the user's foods
-    #    # user.foods
-    #     # iterate through that list of foods and print statements to the console
-    #      User.all.map{|food|food.foods}
-    #      #history = Nutrition.select {|food|food_id==food.id}
-    #     #  User.all.map do|user|
-    #     #     user.foods.map do |food|
-    #     #       puts "This #{food.food_name}"
-    #     #       puts"contains #{food.calories} calories, #{food.carbs} grams of carbs and #{food.fat} grams of fat"
-    #     #  end
-    #     # end
-         
-    #    #  user_options
-    #  end
     #total up calorie count
-   #find a way to destroy entries after user exits
-#    def run_application
-#     user=@user_instance
-#    # signin_or_sign_up
-#    our_nutrition_facts
-#    end
-   
         
 end
