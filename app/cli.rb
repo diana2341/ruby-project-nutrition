@@ -21,7 +21,7 @@ puts"           😋🍋🍊🍎🍓🍇🍐🍏🥝🥒🍅 🥭🍍🍒🤩"
 end
     
     def user_info(name,age,weight,password)
-     User.find_or_create_by(name:@name_input,age: @age_input,weight:@weight_input, password: @password_input)
+     @user=User.find_or_create_by(name:@name_input,age: @age_input,weight:@weight_input, password: @password_input)
     end
     
 
@@ -48,10 +48,11 @@ end
             q.modify   :capitalize
           end
 
-        @age_input= prompt.ask("What is your age?") do |q|
+           @age_input=prompt.ask("What is your age?") do |q|
             q.required true
             q.validate /^[0-9]+$/
             q.messages[:valid?]="Must be a number"
+           
           end
 
         @weight_input= prompt.ask("Enter your weight in lbs.") do |q|
@@ -149,10 +150,13 @@ end
                 end
            @food= food_input(@food_name,@calories_input,@carbs_input,@fat_input)
             user = User.find_by(name: user)
-            amount=@amounts
-            create_nutrition_instance(user,@food,amount)          
+            @amount=@amounts
+            create_nutrition_instance(@user,@food,@amount)          
     end
+    def Nutrition(user,food,amount)
+        Nutrition.find_or_create_by(amount:@amounts, food_id:@food.id, user_id:@user.id) 
 
+    end
 
     def create_nutrition_instance(user,food,amount)
 
@@ -160,8 +164,9 @@ end
 
          puts"🥄How many #{@food_name}'s?"
         @amounts=gets.chomp
-        Nutrition.find_or_create_by(amount:@amounts, food_id:@food.id, user_id:@user.id) 
+       # Nutrition.find_or_create_by(amount:@amounts, food_id:@food.id, user_id:@user.id).first 
     user_options
+    Nutrition(@user,@food,@amounts)
     end
 
     def exit 
@@ -182,7 +187,7 @@ end
     end
         user=@user
             if @user_option=='Show my history'
-                food_log_history
+                food_log_history(user)
             elsif @user_option=='My information'
                 display_info
             elsif @user_option=="Make another entry"
@@ -216,27 +221,18 @@ end
     def update_account(user)
         prompt = TTY::Prompt.new(symbols:{marker:"🥖"})
         @update_option= prompt.select("Choose what to update")do |option|
-        #option.choice 'password'
         option.choice 'weight'
        
         end
-           # if @update_option== 'password'
-                #update_password(user)
+          
             if @update_option=='weight'
                 update_weight(user)
             end
     end
 
-    # def update_password(user)#has to update
-    #         puts "Enter new password"
-    #         new_password_input=gets.chomp
-    #      @password_input=new_password_input
-    #      puts "password updated!"     
-    #     user_options
-    # end
-
+ 
     def update_weight(user)#has to update
-            "Update you weight"
+            "Update you weight."
         new_weight_input=gets.chomp
             
          @weight_input=new_weight_input
@@ -246,20 +242,50 @@ end
 
          user_options
         
-    
+        
+
     end
    
-    def food_log_history
-       User.last.foods.map do |info| 
-             puts"▪️ You ate #{@amounts} #{info.food_name}(s), which contains #{info.calories} calories, #{info.carbs} gram(s) of carbs and #{info.fat} gram(s) of fat."        
-        end       
+    def food_log_history(user)
+        puts "You've have eaten"
+        puts"🍏━━━━━━━━━━━━━━━🍏"
+
+        Food.all.map{|food|
+        puts"» #{@amounts} #{food.food_name}(s),contains #{food.calories} calories, #{food.fat} gram(s) of fat & #{food.carbs} gram(s) of carbs. "}
+        
         user_options
     end
 
     def delete_account
-        User.last.delete
-        puts"🥖Were sad to see you go, hope you'll reconsider🥖"
+        prompt = TTY::Prompt.new(symbols:{marker:"🍕"})
+
+        puts "To delete account"
+        puts"🔒━━━━━━━━━━━━━━━"
+        @name_input= prompt.ask("Enter name:") do |q|
+            q.required true
+            q.validate /^[a-zA-Z\s]+$/
+            q.messages[:valid?]="Ivalid name input"
+            q.modify   :capitalize
+          end
+
+        @password_input= prompt.ask("Password:") do |q|
+            q.required true
+            q.validate /^[a-zA-Z0-9_.-]*$/
+            q.messages[:valid?]="Must not contain any Symbols"
+          end
+
+            if user= User.find_by(name:@name_input,password:@password_input)
+                user.destroy
+            Food.all.map{|food|food.destroy}
+
+            else puts"»»»❗invalid information try again❗«««" 
+                delete_account
+        
+       #User.last.delete
+        puts"🥖We're sad to see you go, hope you'll reconsider.🥖"
         puts"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        
+        end
     end
 
     #total up calorie count
